@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OMED IJ – Shareholder Data</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #F4F6F9;
+      color: #374151;
+    }
+
+    /* HEADER */
+    header {
+      background: #1A2470;
+      color: #fff;
+      padding: 20px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left { display: flex; align-items: center; gap: 20px; }
+
+    /* OneMed logo rendered in HTML */
+    .logo-wrap { display: flex; flex-direction: column; align-items: flex-start; }
+    .logo-onemed {
+      font-size: 26px; font-weight: 900;
+      display: flex; align-items: center; gap: 2px; line-height: 1;
+    }
+    .logo-one { color: #1B6EC4; }
+    .logo-cross {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #1B6EC4; color: #fff;
+      font-size: 15px; font-weight: 700; margin-right: 1px;
+    }
+    .logo-med-box {
+      background: #E63B2D; color: #fff;
+      padding: 1px 6px; border-radius: 2px;
+    }
+    .logo-sub {
+      font-size: 7px; letter-spacing: 3.5px; color: #fff;
+      font-weight: 700; margin-top: 3px; opacity: 0.85;
+    }
+
+    .header-divider {
+      width: 1px; height: 44px;
+      background: rgba(255,255,255,0.25);
+    }
+    .header-text h1 {
+      font-size: 16px; font-weight: 700;
+      letter-spacing: 0.3px; color: #fff;
+    }
+    .header-text h2 {
+      font-size: 11.5px; font-weight: 400;
+      color: rgba(255,255,255,0.6); margin-top: 3px;
+    }
+    .header-meta {
+      text-align: right; font-size: 11px;
+      color: rgba(255,255,255,0.6); line-height: 1.8;
+    }
+    .header-meta span { display: block; }
+    .date-badge {
+      background: #E63B2D; color: #fff;
+      padding: 3px 10px; border-radius: 4px;
+      font-weight: 700; font-size: 11px;
+      display: inline-block; margin-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    /* SUMMARY CARDS */
+    .cards {
+      display: flex; gap: 14px;
+      padding: 20px 36px; flex-wrap: wrap;
+    }
+    .card {
+      background: #fff; border-radius: 8px;
+      padding: 15px 20px; flex: 1; min-width: 155px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      border-top: 3px solid #1B6EC4;
+    }
+    .card.red-accent { border-top-color: #E63B2D; }
+    .card .label {
+      font-size: 10px; color: #6b7280;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;
+    }
+    .card .value {
+      font-size: 18px; font-weight: 700; color: #1A2470;
+    }
+    .card .sub { font-size: 10.5px; color: #9ca3af; margin-top: 3px; }
+
+    /* SECTIONS */
+    .section { padding: 0 36px 26px; }
+    .section-title {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.9px;
+      color: #1B6EC4; margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #1B6EC4;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 13px; background: #fff;
+      border-radius: 8px; overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    thead tr { background: #1A2470; color: #fff; }
+    thead th {
+      padding: 11px 14px; text-align: left;
+      font-size: 10.5px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+    }
+    thead th.right { text-align: right; }
+    tbody tr { border-bottom: 1px solid #eef0f4; transition: background 0.15s; }
+    tbody tr:hover { background: #EBF3FF; }
+    tbody td { padding: 10px 14px; vertical-align: middle; color: #374151; }
+    tbody td.right { text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* BADGES */
+    .badge {
+      display: inline-block; padding: 2px 8px;
+      border-radius: 4px; font-size: 10.5px; font-weight: 600;
+    }
+    .badge-local   { background: #DBEAFE; color: #1A2470; }
+    .badge-foreign { background: #FEF3C7; color: #92400e; }
+    .type-badge {
+      display: inline-block; padding: 2px 8px;
+      border-radius: 4px; font-size: 10.5px; font-weight: 600;
+      background: #F3F4F6; color: #374151;
+    }
+
+    /* BAR */
+    .bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .bar-bg {
+      flex: 1; height: 7px; background: #E5E7EB;
+      border-radius: 99px; overflow: hidden; min-width: 60px;
+    }
+    .bar-fill { height: 100%; background: #1B6EC4; border-radius: 99px; }
+    .bar-pct { font-weight: 700; font-size: 13px; min-width: 42px; text-align: right; color: #1A2470; }
+
+    /* CHARTS */
+    .charts-grid { display: flex; gap: 20px; flex-wrap: wrap; }
+    .chart-card {
+      background: #fff; border-radius: 8px;
+      padding: 20px 22px; flex: 1; min-width: 240px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      border-top: 3px solid #1B6EC4;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .chart-card h4 {
+      font-size: 10px; text-transform: uppercase;
+      color: #6b7280; margin-bottom: 14px; letter-spacing: 0.6px;
+      align-self: flex-start;
+    }
+    .chart-inner { display: flex; align-items: center; gap: 18px; width: 100%; }
+    .donut-wrap { position: relative; flex-shrink: 0; }
+    .donut-center {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center; pointer-events: none;
+    }
+    .donut-center .dc-val { font-size: 15px; font-weight: 800; color: #1A2470; line-height: 1; }
+    .donut-center .dc-lbl { font-size: 8px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+    .chart-legend { flex: 1; }
+    .legend-row {
+      display: flex; align-items: center;
+      gap: 8px; margin-bottom: 7px; font-size: 11.5px; cursor: default;
+    }
+    .legend-row:last-child { margin-bottom: 0; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .legend-name { flex: 1; color: #374151; line-height: 1.3; }
+    .legend-pct { font-weight: 700; color: #1A2470; font-size: 12px; }
+    svg.donut path { transition: opacity 0.15s; cursor: pointer; }
+    svg.donut path:hover { opacity: 0.8; }
+
+    /* FOOTER */
+    footer {
+      background: #1A2470; color: rgba(255,255,255,0.55);
+      text-align: center; font-size: 11px;
+      padding: 13px 36px; margin-top: 8px;
+    }
+    footer span { color: #fff; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="logo-wrap">
+      <div class="logo-onemed">
+        <span class="logo-one"><span class="logo-cross">+</span>ne</span>
+        <span class="logo-med-box">Med</span>
+      </div>
+      <div class="logo-sub">HEALTH CARE</div>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-text">
+      <h1>OMED IJ &nbsp;·&nbsp; PT Jayamas Medica Industri Tbk</h1>
+      <h2>Shareholder Structure &amp; Ownership Data &nbsp;|&nbsp; IDX</h2>
+    </div>
+  </div>
+  <div class="header-meta">
+    <span class="date-badge">27 Feb 2026</span>
+    <span>Source: IDX Shareholding Report</span>
+    <span>Prepared by Esente Indonesia</span>
+  </div>
+</header>
+
+<!-- SUMMARY CARDS -->
+<div class="cards">
+  <div class="card">
+    <div class="label">Total Listed Shares</div>
+    <div class="value">27,054,812,400</div>
+    <div class="sub">Computed from disclosed holdings</div>
+  </div>
+  <div class="card">
+    <div class="label">Disclosed Holders</div>
+    <div class="value">5</div>
+    <div class="sub">Major shareholders ≥1%</div>
+  </div>
+  <div class="card red-accent">
+    <div class="label">Top Holder Concentration</div>
+    <div class="value">83.30%</div>
+    <div class="sub">Intisumber Hasilsempurna (CP)</div>
+  </div>
+  <div class="card">
+    <div class="label">Disclosed Ownership</div>
+    <div class="value">94.81%</div>
+    <div class="sub">Sum of 5 major shareholders</div>
+  </div>
+  <div class="card">
+    <div class="label">Est. Public Float</div>
+    <div class="value">~5.19%</div>
+    <div class="sub">Residual from disclosed</div>
+  </div>
+</div>
+
+<!-- SHAREHOLDER TABLE -->
+<div class="section">
+  <div class="section-title">Major Shareholders</div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Investor Name</th>
+        <th>Type</th>
+        <th>L/F</th>
+        <th>Nationality</th>
+        <th class="right">Scripless Shares</th>
+        <th class="right">Scrip Shares</th>
+        <th class="right">Total Shares</th>
+        <th class="right">Ownership %</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Intisumber Hasilsempurna</strong></td>
+        <td><span class="type-badge">CP</span></td>
+        <td><span class="badge badge-local">Local</span></td>
+        <td>Indonesia</td>
+        <td class="right">0</td>
+        <td class="right">22,540,000,000</td>
+        <td class="right"><strong>22,540,000,000</strong></td>
+        <td class="right">
+          <div class="bar-wrap">
+            <div class="bar-bg"><div class="bar-fill" style="width:83.30%"></div></div>
+            <span class="bar-pct">83.30%</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>EFG Bank AG, Singapore Branch A/C Clients</strong></td>
+        <td><span class="type-badge">IB</span></td>
+        <td><span class="badge badge-foreign">Foreign</span></td>
+        <td>Singapore</td>
+        <td class="right">1,350,000,000</td>
+        <td class="right">0</td>
+        <td class="right"><strong>1,350,000,000</strong></td>
+        <td class="right">
+          <div class="bar-wrap">
+            <div class="bar-bg"><div class="bar-fill" style="width:4.99%"></div></div>
+            <span class="bar-pct">4.99%</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>Asian Development Bank (ADB)</strong></td>
+        <td><span class="type-badge">OT</span></td>
+        <td><span class="badge badge-foreign">Foreign</span></td>
+        <td>Philippines</td>
+        <td class="right">928,258,000</td>
+        <td class="right">0</td>
+        <td class="right"><strong>928,258,000</strong></td>
+        <td class="right">
+          <div class="bar-wrap">
+            <div class="bar-bg"><div class="bar-fill" style="width:3.43%"></div></div>
+            <span class="bar-pct">3.43%</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>Ventura Inovasi Pertama, PT</strong></td>
+        <td><span class="type-badge">CP</span></td>
+        <td><span class="badge badge-local">Local</span></td>
+        <td>Indonesia</td>
+        <td class="right">452,941,100</td>
+        <td class="right">0</td>
+        <td class="right"><strong>452,941,100</strong></td>
+        <td class="right">
+          <div class="bar-wrap">
+            <div class="bar-bg"><div class="bar-fill" style="width:1.67%"></div></div>
+            <span class="bar-pct">1.67%</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>PT Puncak Segar Abadi</strong></td>
+        <td><span class="type-badge">CP</span></td>
+        <td><span class="badge badge-local">Local</span></td>
+        <td>Indonesia</td>
+        <td class="right">383,613,300</td>
+        <td class="right">0</td>
+        <td class="right"><strong>383,613,300</strong></td>
+        <td class="right">
+          <div class="bar-wrap">
+            <div class="bar-bg"><div class="bar-fill" style="width:1.42%"></div></div>
+            <span class="bar-pct">1.42%</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- OWNERSHIP CHARTS -->
+<div class="section">
+  <div class="section-title">Ownership Structure Breakdown</div>
+  <div class="charts-grid" id="chartsGrid"></div>
+</div>
+
+<script>
+  const CHARTS = [
+    {
+      title: 'By Holder',
+      centerVal: '83.3%',
+      centerLbl: 'Top Holder',
+      slices: [
+        { label: 'Intisumber Hasilsempurna', pct: 83.30, color: '#1A2470' },
+        { label: 'EFG Bank AG Singapore',    pct: 4.99,  color: '#1B6EC4' },
+        { label: 'Asian Development Bank',   pct: 3.43,  color: '#E63B2D' },
+        { label: 'Ventura Inovasi Pertama',  pct: 1.67,  color: '#F47C20' },
+        { label: 'PT Puncak Segar Abadi',    pct: 1.42,  color: '#93C5FD' },
+        { label: 'Public / Others',          pct: 5.19,  color: '#E5E7EB' },
+      ]
+    },
+    {
+      title: 'By Local vs Foreign',
+      centerVal: '86.4%',
+      centerLbl: 'Local',
+      slices: [
+        { label: 'Local (Indonesia)',      pct: 86.39, color: '#1A2470' },
+        { label: 'Foreign',               pct: 8.42,  color: '#1B6EC4' },
+        { label: 'Public / Unaccounted',  pct: 5.19,  color: '#E5E7EB' },
+      ]
+    },
+    {
+      title: 'By Investor Type',
+      centerVal: '86.4%',
+      centerLbl: 'Corporate',
+      slices: [
+        { label: 'CP – Corporate',           pct: 86.39, color: '#1A2470' },
+        { label: 'IB – Institutional/Bank',  pct: 4.99,  color: '#1B6EC4' },
+        { label: 'OT – Other (Multilateral)',pct: 3.43,  color: '#E63B2D' },
+        { label: 'Public / Unaccounted',     pct: 5.19,  color: '#E5E7EB' },
+      ]
+    }
+  ];
+
+  function polarToXY(cx, cy, r, angleDeg) {
+    const rad = (angleDeg - 90) * Math.PI / 180;
+    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  }
+
+  function donutSlicePath(cx, cy, R, r, startDeg, endDeg) {
+    const s1 = polarToXY(cx, cy, R, startDeg);
+    const e1 = polarToXY(cx, cy, R, endDeg);
+    const s2 = polarToXY(cx, cy, r, endDeg);
+    const e2 = polarToXY(cx, cy, r, startDeg);
+    const large = (endDeg - startDeg) > 180 ? 1 : 0;
+    return [
+      `M ${s1.x} ${s1.y}`,
+      `A ${R} ${R} 0 ${large} 1 ${e1.x} ${e1.y}`,
+      `L ${s2.x} ${s2.y}`,
+      `A ${r} ${r} 0 ${large} 0 ${e2.x} ${e2.y}`,
+      'Z'
+    ].join(' ');
+  }
+
+  function buildChart(chart) {
+    const size = 160, cx = 80, cy = 80, R = 68, r = 42;
+    const total = chart.slices.reduce((s, d) => s + d.pct, 0);
+
+    let paths = '';
+    let angle = 0;
+    chart.slices.forEach(slice => {
+      const sweep = (slice.pct / total) * 360;
+      const end = angle + sweep;
+      const gap = 1.2;
+      paths += `<path d="${donutSlicePath(cx, cy, R, r, angle + gap/2, end - gap/2)}"
+        fill="${slice.color}" title="${slice.label}: ${slice.pct}%"/>`;
+      angle = end;
+    });
+
+    const legendRows = chart.slices.map(s =>
+      `<div class="legend-row">
+        <div class="legend-dot" style="background:${s.color}"></div>
+        <span class="legend-name">${s.label}</span>
+        <span class="legend-pct">${s.pct}%</span>
+      </div>`
+    ).join('');
+
+    return `
+      <div class="chart-card">
+        <h4>${chart.title}</h4>
+        <div class="chart-inner">
+          <div class="donut-wrap">
+            <svg class="donut" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${paths}</svg>
+            <div class="donut-center">
+              <div class="dc-val">${chart.centerVal}</div>
+              <div class="dc-lbl">${chart.centerLbl}</div>
+            </div>
+          </div>
+          <div class="chart-legend">${legendRows}</div>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('chartsGrid').innerHTML = CHARTS.map(buildChart).join('');
+</script>
+
+<!-- NOTES -->
+<div class="section">
+  <div class="section-title">Notes</div>
+  <div style="background:#fff; border-radius:8px; padding:16px 22px; font-size:12.5px; line-height:1.8; box-shadow:0 1px 4px rgba(0,0,0,0.07); color:#374151;">
+    <ul style="padding-left:18px;">
+      <li><strong style="color:#1A2470;">CP</strong> = Corporate &nbsp;|&nbsp; <strong style="color:#1A2470;">IB</strong> = Institution/Bank &nbsp;|&nbsp; <strong style="color:#1A2470;">OT</strong> = Other (e.g., multilateral institution)</li>
+      <li><strong style="color:#1A2470;">L</strong> = Local (Indonesia) &nbsp;|&nbsp; <strong style="color:#1A2470;">A</strong> = Foreign (Asing)</li>
+      <li>Intisumber Hasilsempurna is the controlling shareholder with <strong>83.30%</strong> held entirely in scrip form.</li>
+      <li>ADB (Asian Development Bank) classified under Philippines domicile as its headquarters.</li>
+      <li>Disclosed %: <strong>94.81%</strong> — Public float estimated at <strong>~5.19%</strong> (residual).</li>
+      <li>Data as of <strong>27 February 2026</strong>. Source: IDX Shareholding Report.</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  Prepared by <span>Esente Indonesia</span> &nbsp;·&nbsp; Data Date: <span>27 Feb 2026</span> &nbsp;·&nbsp; Source: IDX
+</footer>
+
+</body>
+</html>
